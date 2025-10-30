@@ -2,6 +2,7 @@ import exspress from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import connectDB from './config/db.js';
+import cookieparser from 'cookie-parser';
 
 import authRoutes from './routes/authRoutes.js';
 import availabilityRoutes from './routes/availabilityRoutes.js';
@@ -13,6 +14,7 @@ connectDB();
 const app = exspress();
 app.use(cors());
 app.use(exspress.json());
+app.use(cookieparser());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/availability', availabilityRoutes);
