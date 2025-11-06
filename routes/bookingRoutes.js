@@ -3,5 +3,5 @@ import {createBooking,cancelBooking} from "../controllers/bookingController.js";
 const router = express.Router();
 
 router.post("/create", createBooking);
-router.post("/cancel", cancelBooking);  
+router.put("/cancel/:bookingId", cancelBooking);  
 export default router;
