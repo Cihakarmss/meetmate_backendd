@@ -1,19 +1,28 @@
 import jwt from "jsonwebtoken";
 
-export default (req, res, next) => {
-  const token =
-    req.cookies?.token ||
-    (req.headers.authorization || "").replace(/Bearer\s?/, "");
-
-  if (!token) {
-    return res.status(403).json({ message: "No access" });
-  }
-
+const checkAuth = (req, res, next) => {
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || "secret123");
-    req.userId = decoded.userId; // 👈 düzəldilmiş sətir
+    
+    const tokenFromCookie = req.cookies?.token;
+    const tokenFromHeader = (req.headers.authorization || "").replace(/Bearer\s?/, "");
+    const token = tokenFromCookie || tokenFromHeader;
+
+    
+    if (!token) {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
+
+    
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    
+    req.userId = decoded.userId;
+
     next();
   } catch (err) {
-    return res.status(403).json({ message: "Invalid token", error: err.message });
+    console.error("Auth error:", err.message);
+    return res.status(403).json({ message: "Invalid or expired token" });
   }
 };
+
+export default checkAuth;

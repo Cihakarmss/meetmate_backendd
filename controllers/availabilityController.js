@@ -2,7 +2,8 @@ import Availability from "../models/Availability.js";
 
 export const addAvailability = async (req, res) => {
   try {
-    const userId = req.userId; // checkAuth-dan gəlir
+    console.log("Req User ID:", req.userId);
+    const userId = req.userId;
 
     const { date, timeSlots } = req.body;
 
@@ -11,7 +12,7 @@ export const addAvailability = async (req, res) => {
     }
 
     const availability = new Availability({
-      user: userId, // ⚠ userId yox, user
+      user: userId,
       date,
       timeSlots,
       isBooked: false,
