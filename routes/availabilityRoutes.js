@@ -1,8 +1,8 @@
 import express from "express";
-import { addAvilability } from "../controllers/availabilityController.js";
+import { addAvailability } from "../controllers/availabilityController.js";
 
 const router = express.Router();
 
-router.post("/add", addAvilability);
+router.post("/add", addAvailability,);
 
 export default router;
