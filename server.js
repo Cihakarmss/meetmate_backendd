@@ -28,6 +28,7 @@ app.use('/api/availability', availabilityRoutes);
 app.use('/api/booking', bookingRoutes);
 app.use('/api/user', userRoutes);
 
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`✅ Server is running on port ${PORT}`);

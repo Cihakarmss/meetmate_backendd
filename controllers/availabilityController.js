@@ -1,15 +1,40 @@
 import Availability from "../models/Availability.js";
 
+export const getAvailabilities = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const availabilities = await Availability.find({ user: userId })
+      .populate("user", "name email")
+      .populate("guest", "name email"); 
+    res.json(availabilities);
+  } catch (error) {
+    console.error("❌ getAvailabilities error:", error.message);
+    res.status(500).json({ message: "Failed to fetch availabilities" });
+  }
+};
+
+export const getUserAvailabilities = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const availabilities = await Availability.find({ user: id })
+      .populate("user", "name email")
+      .populate("guest", "name email"); 
+
+    if (!availabilities || availabilities.length === 0) {
+      return res.json([]);
+    }
+
+    res.json(availabilities);
+  } catch (error) {
+    console.error("❌ getUserAvailabilities error:", error.message);
+    res.status(500).json({ message: "Failed to fetch user availabilities" });
+  }
+};
+
 export const addAvailability = async (req, res) => {
   try {
-    console.log("Req User ID:", req.userId);
-    const userId = req.userId;
-
     const { date, timeSlots } = req.body;
-
-    if (!userId) {
-      return res.status(400).json({ message: "User not authenticated" });
-    }
+    const userId = req.userId;
 
     const availability = new Availability({
       user: userId,
@@ -21,9 +46,7 @@ export const addAvailability = async (req, res) => {
     await availability.save();
     res.status(201).json({ message: "Availability added successfully" });
   } catch (error) {
-    res.status(500).json({
-      message: "Failed to add availability",
-      error: error.message,
-    });
+    console.error("❌ addAvailability error:", error.message);
+    res.status(500).json({ message: "Failed to add availability" });
   }
 };
